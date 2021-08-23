@@ -7,7 +7,6 @@ from PIL import Image
 from torchvision import transforms
 
 pretrained_model = "pwny_cifar_eps_0.pth"
-input_image = Image.open("download.png")
 lr = 1e-4
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 imagenet_class_index = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
@@ -46,6 +45,7 @@ def attack(model, device, test_loader, lr):
 
 image = Image.open("download.png")
 image = np.array(image)
+
 model = models.resnet18()
 num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, len(imagenet_class_index))
@@ -53,7 +53,7 @@ model.load_state_dict(torch.load(pretrained_model, map_location='cpu'))
 model_ft = model.to("cpu")
 model.eval()
 
-input_tensor = preprocess(input_image)
+input_tensor = preprocess(image)
 input_batch = input_tensor.unsqueeze(0)
 dl = torch.utils.data.DataLoader((input_tensor,2))
 
